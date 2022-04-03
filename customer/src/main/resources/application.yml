@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: customer
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+  datasource:
+    username: customer
+    password: customer
+    url: jdbc:postgresql://localhost:5432/customer
+  liquibase:
+    change-log: changelog/changelog.yml
+    enabled: false
