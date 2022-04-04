@@ -1,0 +1,23 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: fraud
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+  datasource:
+    username: fraud
+    password: fraud
+    url: jdbc:postgresql://localhost:5432/fraud
+  liquibase:
+    change-log: changelog/changelog.yml
+    enabled: false
