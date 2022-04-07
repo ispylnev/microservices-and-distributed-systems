@@ -1,7 +1,9 @@
-create table IF NOT EXISTS CUSTOMER
+create table customer
 (
-    ID         NUMERIC not null,
-    FIRST_NAME VARCHAR,
-    LAST_NAME  VARCHAR,
-    EMAIL      VARCHAR
+    id         integer not null
+        constraint customer_pkey
+            primary key,
+    email      varchar(255),
+    first_name varchar(255),
+    last_name  varchar(255)
 );
