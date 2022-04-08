@@ -2,15 +2,16 @@ package com.customer.service;
 
 import com.clients.fraud.FraudCheckResponse;
 import com.clients.fraud.FraudClient;
+import com.clients.notification.NotificationClient;
+import com.clients.notification.NotificationRequest;
 import com.customer.entity.Customer;
 import com.customer.dto.CustomerRegistrationRequest;
 import com.customer.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public record CustomerService(CustomerRepository customerRepository,
-                              RestTemplate restTemplate,
+                              NotificationClient notificationClient,
                               FraudClient fraudClient) {
     public void registerCustomer(CustomerRegistrationRequest customerRequest
     ) {
@@ -25,5 +26,15 @@ public record CustomerService(CustomerRepository customerRepository,
         if (fraudCheckResponse.isFraudster()) {
             throw new IllegalStateException("is fraudster");
         }
+        // todo: send notification
+        // todo: make it async. i.e add to queue
+        notificationClient.sendNotification(
+                new NotificationRequest(
+                        newCustomer.getId(),
+                        newCustomer.getEmail(),
+                        String.format("Hi %s, welcome to Amigoscode...",
+                                newCustomer.getFirstName())
+                )
+        );
     }
 }
