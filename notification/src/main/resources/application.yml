@@ -4,9 +4,9 @@ spring:
   application:
     name: notification
   datasource:
-    password: password
-    url: jdbc:postgresql://localhost:5432/notification
-    username: amigoscode
+    password: customer
+    url: jdbc:postgresql://localhost:5432/customer
+    username: customer
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -15,6 +15,10 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: true
+
+  zipkin:
+    base-url: http://127.0.0.1:9411/
+
 eureka:
   client:
     service-url:

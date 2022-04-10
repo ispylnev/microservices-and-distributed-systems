@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 public record CustomerService(CustomerRepository customerRepository,
                               NotificationClient notificationClient,
                               FraudClient fraudClient) {
+
+
     public void registerCustomer(CustomerRegistrationRequest customerRequest
     ) {
         Customer newCustomer = Customer.builder()

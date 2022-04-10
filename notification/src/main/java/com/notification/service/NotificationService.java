@@ -9,10 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @Service
-@AllArgsConstructor
-public class NotificationService {
-
-    private final NotificationRepository notificationRepository;
+public record NotificationService (NotificationRepository notificationRepository){
 
     public void send(NotificationRequest notificationRequest) {
         notificationRepository.save(
