@@ -6,11 +6,8 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 @Slf4j
-public class RabbitMqMessageProducer {
-    private final AmqpTemplate amqpTemplate;
-
+public record RabbitMqMessageProducer (AmqpTemplate amqpTemplate) {
     public void publish(Object payload, String exchange, String routingKey) {
         log.info("try to publish the message to the {} using routingKey {}. Payload : {}",
                 exchange, routingKey, payload);

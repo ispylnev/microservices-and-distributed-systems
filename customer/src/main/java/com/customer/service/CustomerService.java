@@ -1,5 +1,6 @@
 package com.customer.service;
 
+import com.amqp.service.RabbitMqMessageProducer;
 import com.clients.fraud.FraudCheckResponse;
 import com.clients.fraud.FraudClient;
 import com.clients.notification.NotificationClient;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Service;
 @Service
 public record CustomerService(CustomerRepository customerRepository,
                               NotificationClient notificationClient,
-                              FraudClient fraudClient) {
+                              FraudClient fraudClient,
+                              RabbitMqMessageProducer rabbitMqMessageProducer
+) {
 
 
     public void registerCustomer(CustomerRegistrationRequest customerRequest
@@ -28,15 +31,23 @@ public record CustomerService(CustomerRepository customerRepository,
         if (fraudCheckResponse.isFraudster()) {
             throw new IllegalStateException("is fraudster");
         }
-        // todo: send notification
-        // todo: make it async. i.e add to queue
-        notificationClient.sendNotification(
-                new NotificationRequest(
-                        newCustomer.getId(),
-                        newCustomer.getEmail(),
-                        String.format("Hi %s, welcome to Amigoscode...",
-                                newCustomer.getFirstName())
-                )
-        );
+
+        NotificationRequest notificationRequest = new NotificationRequest(
+                newCustomer.getId(),
+                newCustomer.getEmail(),
+                String.format("Hi %s, welcome to system...",
+                        newCustomer.getFirstName()));
+        try {
+            rabbitMqMessageProducer.publish(notificationRequest,
+                    "internal.exchange", "internal.notification.routing-key");
+        } catch (Exception e) {
+            //        notificationClient.sendNotification(
+//                new NotificationRequest(
+//                        newCustomer.getId(),
+//                        newCustomer.getEmail(),
+//                        String.format("Hi %s, welcome to Amigoscode...",
+//                                newCustomer.getFirstName())
+//                )
+        }
     }
 }
