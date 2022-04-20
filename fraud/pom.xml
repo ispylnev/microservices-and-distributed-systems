@@ -10,14 +10,19 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>fraud</artifactId>
-
+    <packaging>jar</packaging>
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
         <liquibase.maven.plugin.version>4.3.2</liquibase.maven.plugin.version>
         <liquibase.core.version>4.3.1</liquibase.core.version>
     </properties>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
