@@ -14,15 +14,12 @@ spring:
       hibernate:
         format_sql: true
   zipkin:
-    base-url: http://127.0.0.1:9411/
-
-  rabbitmq:
-    addresses: rabbitmq:5672
+    base-url: http://zipkin:9411/
 
   datasource:
     username: customer
     password: customer
-    url: jdbc:postgresql://localhost:5432/customer
+    url: jdbc:postgresql://postgres:5432/customer
   liquibase:
     change-log: changelog/changelog.yml
     enabled: false
@@ -30,6 +27,6 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://eureka-server:8761/eureka
     fetch-registry: true
     register-with-eureka: true
