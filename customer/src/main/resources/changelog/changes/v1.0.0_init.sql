@@ -1,4 +1,4 @@
-create table customer
+create table if not exists customer
 (
     id         integer not null
         constraint customer_pkey
