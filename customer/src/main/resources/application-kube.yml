@@ -19,7 +19,7 @@ spring:
   datasource:
     username: customer
     password: customer
-    url: jdbc:postgresql://postgres:5432/customer
+    url: jdbc:postgresql://postgres:5432/customerdb
   liquibase:
     change-log: changelog/changelog.yml
     enabled: false
