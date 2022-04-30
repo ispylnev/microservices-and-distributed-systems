@@ -4,7 +4,10 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
-@FeignClient("notification")
+@FeignClient(
+        name = "notification",
+        url = "${clients.notification.url}"
+)
 @Service
 public interface NotificationClient {
 
