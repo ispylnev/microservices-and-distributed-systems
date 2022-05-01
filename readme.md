@@ -1,6 +1,8 @@
 
 # This is a demo application project which shows you how microservices architecture can build and what is it in common way.
 
+Open up a picture to consider with schema
+
 <img src="schema.svg" width="128"/>
 In this application I am using the stack
 
