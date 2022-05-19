@@ -41,13 +41,13 @@ public record CustomerService(CustomerRepository customerRepository,
             rabbitMqMessageProducer.publish(notificationRequest,
                     "internal.exchange", "internal.notification.routing-key");
         } catch (Exception e) {
-            //        notificationClient.sendNotification(
-//                new NotificationRequest(
-//                        newCustomer.getId(),
-//                        newCustomer.getEmail(),
-//                        String.format("Hi %s, welcome to Amigoscode...",
-//                                newCustomer.getFirstName())
-//                )
+            notificationClient.sendNotification(
+                    new NotificationRequest(
+                            newCustomer.getId(),
+                            newCustomer.getEmail(),
+                            String.format("Hi %s, welcome to Amigoscode...",
+                                    newCustomer.getFirstName())
+                    ));
         }
     }
 }

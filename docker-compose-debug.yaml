@@ -1,19 +1,5 @@
-#version: "2.2"
-#services:
-#  postgres:
-#    container_name: customerdb
-#    image: postgres
-#    environment:
-#      POSTGRES_USER: customer
-#      POSTGRES_PASSWORD: customer
-#      PGDATA: /data/postgres
-#    volumes:
-#      - postgres:/data/postgres_destributed
-#    ports:
-#      - "5432:5432"
-#    networks:
-#      - postgres
-#    restart: unless-stopped
+version: "3.3"
+services:
 #
 #  zipkin:
 #    image: openzipkin/zipkin
@@ -41,13 +27,72 @@
 #      - spring
 #    depends_on:
 #      - zipkin
-#
-#networks:
+
 #  postgres:
-#    driver: bridge
-#  spring:
-#    driver: bridge
-#
-#volumes:
-#  postgres:
-#  pgadmin:
+#    container_name: customerdb
+#    image: postgres
+#    environment:
+#      POSTGRES_USER: customer
+#      POSTGRES_PASSWORD: customer
+##      PGDATA: /data/postgres
+#    volumes:
+#      - postgres-data:/data/postgres_destributed
+#    ports:
+#      - "5432:5432"
+#    networks:
+#      - postgres
+#    restart: unless-stopped
+
+  axonserver:
+    image: axoniq/axonserver
+    hostname: axonserver
+    volumes:
+      - axonserver-data:/data
+      - axonserver-events:/eventdata
+      - axonserver-config:/config:ro
+    ports:
+      - '8024:8024'
+      - '8124:8124'
+      - '8224:8224'
+    networks:
+      - axonserver
+
+volumes:
+#  postgres-data:
+  axonserver-data:
+  axonserver-events:
+  axonserver-config:
+
+volumes:
+#  postgres-data:
+#    driver: local
+#    driver_opts:
+#      type: none
+#      device: ${PWD}/postgres
+#      o: bind
+  axonserver-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/data
+      o: bind
+  axonserver-events:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/events
+      o: bind
+  axonserver-config:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/config
+      o: bind
+
+networks:
+  postgres:
+    driver: bridge
+  spring:
+    driver: bridge
+  axonserver:
+    driver: bridge
