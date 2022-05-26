@@ -15,9 +15,12 @@ import java.math.BigDecimal;
 public class ProductEntity {
 
     @Id
-    @Column(unique = true)
+    @Column(name = "product_id")
     private String productId;
+    @Column(name = "title")
     private String title;
+    @Column(name = "price")
     private BigDecimal price;
+    @Column(name = "quantity")
     private Integer quantity;
 }

@@ -28,20 +28,20 @@ services:
 #    depends_on:
 #      - zipkin
 
-#  postgres:
-#    container_name: customerdb
-#    image: postgres
-#    environment:
-#      POSTGRES_USER: customer
-#      POSTGRES_PASSWORD: customer
-##      PGDATA: /data/postgres
-#    volumes:
-#      - postgres-data:/data/postgres_destributed
-#    ports:
-#      - "5432:5432"
-#    networks:
-#      - postgres
-#    restart: unless-stopped
+  postgres:
+    container_name: customerdb
+    image: postgres
+    environment:
+      POSTGRES_USER: customer
+      POSTGRES_PASSWORD: customer
+      PGDATA: /data/postgres
+    volumes:
+      - postgres-data:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
 
   axonserver:
     image: axoniq/axonserver
@@ -58,35 +58,35 @@ services:
       - axonserver
 
 volumes:
-#  postgres-data:
+  postgres-data:
   axonserver-data:
   axonserver-events:
   axonserver-config:
 
 volumes:
-#  postgres-data:
-#    driver: local
-#    driver_opts:
-#      type: none
-#      device: ${PWD}/postgres
-#      o: bind
+  postgres-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/docker-data/postgres/data
+      o: bind
   axonserver-data:
     driver: local
     driver_opts:
       type: none
-      device: ${PWD}/data
+      device: ${PWD}/docker-data/axon/data
       o: bind
   axonserver-events:
     driver: local
     driver_opts:
       type: none
-      device: ${PWD}/events
+      device: ${PWD}/docker-data/axon/events
       o: bind
   axonserver-config:
     driver: local
     driver_opts:
       type: none
-      device: ${PWD}/config
+      device: ${PWD}/docker-data/axon/config
       o: bind
 
 networks:
