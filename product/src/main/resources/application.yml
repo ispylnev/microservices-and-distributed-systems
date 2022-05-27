@@ -26,6 +26,12 @@ spring:
   liquibase:
     change-log: changelog/changelog.yml
     enabled: false
+axon:
+  eventhandling:
+    processors:
+      product-group:
+        mode: subscribing
+
 #
 #eureka:
 #  client:

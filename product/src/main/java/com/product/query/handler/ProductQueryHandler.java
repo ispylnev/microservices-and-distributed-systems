@@ -5,6 +5,7 @@ import com.product.core.service.ProductService;
 import com.product.query.model.FindProductQuery;
 import com.product.query.model.ProductQueryModel;
 import lombok.RequiredArgsConstructor;
+import org.axonframework.config.ProcessingGroup;
 import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@ProcessingGroup("product-group")
 public class ProductQueryHandler {
     private final ProductService productService;
 

@@ -28,10 +28,6 @@ public class ProductCommandController {
                 createProductDto.title(),
                 createProductDto.price(),
                 createProductDto.quantity());
-        try {
-            commandGateway.sendAndWait(createProductCommand);
-        } catch (Exception ex) {
-            log.info(ex.getLocalizedMessage());
-        }
+        commandGateway.sendAndWait(createProductCommand);
     }
 }
