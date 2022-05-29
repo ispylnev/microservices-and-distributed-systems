@@ -1,0 +1,44 @@
+server:
+  port: 8086
+  error:
+    include-binding-errors: always
+    include-message: always
+
+spring:
+  application:
+    name: order
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+#  zipkin:
+#    base-url: http://127.0.0.1:9411/
+#
+  datasource:
+    username: customer
+    password: customer
+    url: jdbc:postgresql://localhost:5432/customer
+  liquibase:
+    change-log: changelog/changelog.yml
+    enabled: false
+axon:
+  eventhandling:
+    processors:
+      product-group:
+        mode: subscribing
+  axonserver:
+    token: 123abc
+
+#
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka
+#    fetch-registry: true
+#    register-with-eureka: true
+#    enabled: false

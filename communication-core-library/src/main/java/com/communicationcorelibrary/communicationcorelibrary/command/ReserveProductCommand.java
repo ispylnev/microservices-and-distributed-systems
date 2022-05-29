@@ -1,0 +1,15 @@
+package com.communicationcorelibrary.communicationcorelibrary.command;
+
+import lombok.Builder;
+import lombok.Data;
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
+
+@Data
+@Builder
+public class ReserveProductCommand {
+    @TargetAggregateIdentifier
+    private String productId;
+    private int quantity;
+    private String orderID;
+    private String userId;
+}
