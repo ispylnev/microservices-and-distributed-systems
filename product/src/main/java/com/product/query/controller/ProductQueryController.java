@@ -1,6 +1,5 @@
 package com.product.query.controller;
 
-import com.product.core.repository.ProductRepository;
 import com.product.query.model.FindProductQuery;
 import com.product.query.model.ProductQueryModel;
 import lombok.RequiredArgsConstructor;

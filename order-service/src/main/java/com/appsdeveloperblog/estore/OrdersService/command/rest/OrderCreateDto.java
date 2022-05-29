@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class OrderCreateRest {
+public class OrderCreateDto {
 
     @NotBlank(message = "Order productId is a required field")
     private String productId;

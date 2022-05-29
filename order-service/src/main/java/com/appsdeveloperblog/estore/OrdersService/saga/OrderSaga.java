@@ -21,7 +21,7 @@ public class OrderSaga {
     @SagaEventHandler(associationProperty = "orderId")
     public void handle(OrderCreatedEvent orderCreatedEvent) {
         ReserveProductCommand reserveProductCommand = ReserveProductCommand.builder()
-                .orderID(orderCreatedEvent.getOrderId())
+                .orderId(orderCreatedEvent.getOrderId())
                 .productId(orderCreatedEvent.getProductId())
                 .userId(orderCreatedEvent.getUserId())
                 .quantity(orderCreatedEvent.getQuantity())

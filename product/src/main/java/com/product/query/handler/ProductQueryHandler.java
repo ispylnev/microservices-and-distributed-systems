@@ -1,7 +1,7 @@
 package com.product.query.handler;
 
 import com.product.core.entity.ProductEntity;
-import com.product.core.service.ProductService;
+import com.product.query.service.ProductService;
 import com.product.query.model.FindProductQuery;
 import com.product.query.model.ProductQueryModel;
 import lombok.RequiredArgsConstructor;

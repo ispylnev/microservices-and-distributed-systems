@@ -1,5 +1,7 @@
 package com.product.core.agregate;
 
+import com.communicationcorelibrary.communicationcorelibrary.command.ReserveProductCommand;
+import com.communicationcorelibrary.communicationcorelibrary.event.ProductReservedEvent;
 import com.product.command.CreateProductCommand;
 import com.product.core.event.ProductCreatedEvent;
 import lombok.NoArgsConstructor;
@@ -34,12 +36,33 @@ public class ProductAggregate {
     }
 
 
-    //called after AggregateLifecycle.apply
+    @CommandHandler
+    public ProductAggregate(ReserveProductCommand reserveProductCommand) {
+        if (this.quantity < reserveProductCommand.getQuantity()) {
+            throw new IllegalArgumentException("Insufficient number of itemes in stock");
+        }
+
+        ProductReservedEvent productReservedEvent = ProductReservedEvent.builder()
+                .orderId(reserveProductCommand.getOrderId())
+                .productId(reserveProductCommand.getProductId())
+                .userId(reserveProductCommand.getUserId())
+                .quantity(reserveProductCommand.getQuantity())
+                .build();
+        AggregateLifecycle.apply(productReservedEvent);
+    }
+
+
+    //called after AggregateLifecycle.apply and send event source to command bus
     @EventSourcingHandler
     public void on(ProductCreatedEvent productCreatedEvent) {
         this.productId = productCreatedEvent.getProductId();
         this.title = productCreatedEvent.getProductId();
         this.price = productCreatedEvent.getPrice();
         this.quantity = productCreatedEvent.getQuantity();
+    }
+
+    @EventSourcingHandler
+    public void on(ProductReservedEvent productReservedEvent) {
+        this.quantity -= productReservedEvent.getQuantity();
     }
 }

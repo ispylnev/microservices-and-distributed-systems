@@ -1,7 +1,7 @@
-package com.product.core.service;
+package com.product.query.service;
 
 import com.product.core.entity.ProductEntity;
-import com.product.core.repository.ProductRepository;
+import com.product.query.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -28,7 +28,7 @@ public class OrdersCommandController {
     }
 
     @PostMapping
-    public String createOrder(@Valid @RequestBody OrderCreateRest order) {
+    public String createOrder(@Valid @RequestBody OrderCreateDto order) {
         
         String userId = "27b95829-4f3f-4ddf-8983-151ba010e35b";
 

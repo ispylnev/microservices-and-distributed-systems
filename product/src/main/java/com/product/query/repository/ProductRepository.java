@@ -1,4 +1,4 @@
-package com.product.core.repository;
+package com.product.query.repository;
 
 import com.product.core.entity.ProductEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
