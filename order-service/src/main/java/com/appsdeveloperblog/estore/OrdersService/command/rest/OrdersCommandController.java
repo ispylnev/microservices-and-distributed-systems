@@ -42,7 +42,5 @@ public class OrdersCommandController {
                 .build();
 
         return commandGateway.sendAndWait(createOrderCommand);
-
     }
-
 }
