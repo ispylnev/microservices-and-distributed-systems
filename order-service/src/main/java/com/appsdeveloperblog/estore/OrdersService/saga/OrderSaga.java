@@ -1,12 +1,13 @@
 package com.appsdeveloperblog.estore.OrdersService.saga;
 
+import com.appsdeveloperblog.estore.OrdersService.command.commands.ApprovedOrderCommand;
 import com.appsdeveloperblog.estore.OrdersService.core.events.OrderCreatedEvent;
+import com.communicationcorelibrary.communicationcorelibrary.command.ProcessPaymentCommand;
 import com.communicationcorelibrary.communicationcorelibrary.command.ReserveProductCommand;
+import com.communicationcorelibrary.communicationcorelibrary.event.PaymentProcessedEvent;
 import com.communicationcorelibrary.communicationcorelibrary.event.ProductReservedEvent;
 import com.communicationcorelibrary.communicationcorelibrary.model.User;
 import com.communicationcorelibrary.communicationcorelibrary.query.FetchUserPaymentDetailsQuery;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
@@ -19,6 +20,9 @@ import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.spring.stereotype.Saga;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Saga
 @Component
@@ -60,8 +64,8 @@ public class OrderSaga {
                 new FetchUserPaymentDetailsQuery(productReservedEvent.getUserId());
         User paymentDetails = null;
         try {
-            queryGateway.query(fetchUserPaymentDetailsQuery, ResponseTypes.instanceOf(User.class)).join();
-        } catch (Exception e){
+            paymentDetails = queryGateway.query(fetchUserPaymentDetailsQuery, ResponseTypes.instanceOf(User.class)).join();
+        } catch (Exception e) {
             log.error(e.getMessage());
             // start compensation transaction
             return;
@@ -71,5 +75,28 @@ public class OrderSaga {
             return;
         }
         log.info("user details  has been fetched successfully");
+
+        ProcessPaymentCommand processPaymentCommand = ProcessPaymentCommand.builder()
+                .orderId(productReservedEvent.getOrderId())
+                .paymentDetails(paymentDetails.getPaymentDetails())
+                .paymentId(UUID.randomUUID().toString())
+                .build();
+        String result = null;
+        try {
+            result = commandGateway.sendAndWait(processPaymentCommand, 3, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            log.info("ProcessPayment has been failed");
+            // start compensation transaction
+        }
+        if (result == null) {
+            // start compensation transaction
+        }
+    }
+
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(PaymentProcessedEvent processedEvent) {
+        ApprovedOrderCommand approvedOrderCommand =
+                new ApprovedOrderCommand(processedEvent.getOrderId());
+        commandGateway.send(approvedOrderCommand);
     }
 }
