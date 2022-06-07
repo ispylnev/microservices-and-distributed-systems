@@ -3,6 +3,7 @@ package com.appsdeveloperblog.estore.OrdersService.saga;
 import com.appsdeveloperblog.estore.OrdersService.command.RejectOrderCommand;
 import com.appsdeveloperblog.estore.OrdersService.command.commands.ApprovedOrderCommand;
 import com.appsdeveloperblog.estore.OrdersService.core.events.OrderCreatedEvent;
+import com.appsdeveloperblog.estore.OrdersService.core.events.OrderRejectedEvent;
 import com.appsdeveloperblog.estore.OrdersService.event.OrderApprovedEvent;
 import com.communicationcorelibrary.communicationcorelibrary.command.CancelProductReservationCommand;
 import com.communicationcorelibrary.communicationcorelibrary.command.ProcessPaymentCommand;
@@ -133,5 +134,10 @@ public class OrderSaga {
         RejectOrderCommand command =
                 new RejectOrderCommand(event.getOrderId(), event.getReason());
         commandGateway.send(command);
+    }
+    @SagaEventHandler(associationProperty = "orderId")
+    @EndSaga
+    public void handle(OrderRejectedEvent event) {
+        log.info("Successfully rejected order with id" + event.getOrderId());
     }
 }

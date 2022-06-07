@@ -1,7 +1,9 @@
 package com.appsdeveloperblog.estore.OrdersService;
 
+import com.appsdeveloperblog.estore.OrdersService.command.RejectOrderCommand;
 import com.appsdeveloperblog.estore.OrdersService.command.commands.ApprovedOrderCommand;
 import com.appsdeveloperblog.estore.OrdersService.core.events.OrderCreatedEvent;
+import com.appsdeveloperblog.estore.OrdersService.core.events.OrderRejectedEvent;
 import com.appsdeveloperblog.estore.OrdersService.core.model.OrderStatus;
 import com.appsdeveloperblog.estore.OrdersService.command.commands.CreateOrderCommand;
 import com.appsdeveloperblog.estore.OrdersService.event.OrderApprovedEvent;
@@ -45,15 +47,29 @@ public class OrderAggregate {
     }
 
     @CommandHandler
-    public void handle(ApprovedOrderCommand approvedOrderCommand) {
+    public void handle(ApprovedOrderCommand command) {
         OrderApprovedEvent orderApprovedEvent =
                 new OrderApprovedEvent();
-        orderApprovedEvent.setOrderId(approvedOrderCommand.getOrderId());
+        orderApprovedEvent.setOrderId(command.getOrderId());
         AggregateLifecycle.apply(orderApprovedEvent);
+    }
+
+    @CommandHandler
+    public void handle(RejectOrderCommand command) {
+        OrderRejectedEvent event =
+                new OrderRejectedEvent(command.getOrderId(), command.getReason());
+        AggregateLifecycle.apply(event);
+    }
+
+    @EventSourcingHandler
+    public void on(OrderRejectedEvent event) {
+        this.orderStatus = event.getOrderStatus();
     }
 
     @EventSourcingHandler
     public void on(OrderApprovedEvent orderApprovedEvent) {
         this.orderStatus = orderApprovedEvent.getOrderStatus();
     }
+
+
 }
