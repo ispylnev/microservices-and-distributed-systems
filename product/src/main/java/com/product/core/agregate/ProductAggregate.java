@@ -1,6 +1,8 @@
 package com.product.core.agregate;
 
+import com.communicationcorelibrary.communicationcorelibrary.command.CancelProductReservationCommand;
 import com.communicationcorelibrary.communicationcorelibrary.command.ReserveProductCommand;
+import com.communicationcorelibrary.communicationcorelibrary.event.ProductReservationCancelledEvent;
 import com.communicationcorelibrary.communicationcorelibrary.event.ProductReservedEvent;
 import com.product.command.CreateProductCommand;
 import com.product.core.event.ProductCreatedEvent;
@@ -51,6 +53,18 @@ public class ProductAggregate {
         AggregateLifecycle.apply(productReservedEvent);
     }
 
+    @CommandHandler
+    public void handle(CancelProductReservationCommand command) {
+        ProductReservationCancelledEvent productReservationCancelledEvent =
+                ProductReservationCancelledEvent.builder()
+                        .orderId(command.getOrderId())
+                        .productId(command.getProductId())
+                        .reason(command.getReason())
+                        .quantity(command.getQuantity())
+                        .build();
+        AggregateLifecycle.apply(productReservationCancelledEvent);
+    }
+
 
     //called after AggregateLifecycle.apply and send event source to command bus
     @EventSourcingHandler
@@ -64,5 +78,10 @@ public class ProductAggregate {
     @EventSourcingHandler
     public void on(ProductReservedEvent productReservedEvent) {
         this.quantity -= productReservedEvent.getQuantity();
+    }
+
+    @EventSourcingHandler
+    public void on(ProductReservationCancelledEvent event) {
+        this.quantity += event.getQuantity();
     }
 }

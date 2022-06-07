@@ -1,5 +1,6 @@
 package com.product.query.event;
 
+import com.communicationcorelibrary.communicationcorelibrary.event.ProductReservationCancelledEvent;
 import com.communicationcorelibrary.communicationcorelibrary.event.ProductReservedEvent;
 import com.product.core.entity.ProductEntity;
 import com.product.core.event.ProductCreatedEvent;
@@ -35,6 +36,18 @@ public record ProductEventsHandler(ProductService productService) {
         ProductEntity entity =
                 productService.findById(productReservedEvent.getProductId());
         entity.setQuantity(entity.getQuantity() - productReservedEvent.getQuantity());
+        try {
+            productService.save(entity);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @EventHandler
+    public void on(ProductReservationCancelledEvent event) {
+        ProductEntity entity =
+                productService.findById(event.getProductId());
+        entity.setQuantity(entity.getQuantity() + event.getQuantity());
         try {
             productService.save(entity);
         } catch (IllegalArgumentException e) {

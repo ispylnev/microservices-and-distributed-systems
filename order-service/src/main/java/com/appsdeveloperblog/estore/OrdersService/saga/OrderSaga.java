@@ -1,5 +1,6 @@
 package com.appsdeveloperblog.estore.OrdersService.saga;
 
+import com.appsdeveloperblog.estore.OrdersService.command.RejectOrderCommand;
 import com.appsdeveloperblog.estore.OrdersService.command.commands.ApprovedOrderCommand;
 import com.appsdeveloperblog.estore.OrdersService.core.events.OrderCreatedEvent;
 import com.appsdeveloperblog.estore.OrdersService.event.OrderApprovedEvent;
@@ -7,6 +8,7 @@ import com.communicationcorelibrary.communicationcorelibrary.command.CancelProdu
 import com.communicationcorelibrary.communicationcorelibrary.command.ProcessPaymentCommand;
 import com.communicationcorelibrary.communicationcorelibrary.command.ReserveProductCommand;
 import com.communicationcorelibrary.communicationcorelibrary.event.PaymentProcessedEvent;
+import com.communicationcorelibrary.communicationcorelibrary.event.ProductReservationCancelledEvent;
 import com.communicationcorelibrary.communicationcorelibrary.event.ProductReservedEvent;
 import com.communicationcorelibrary.communicationcorelibrary.model.User;
 import com.communicationcorelibrary.communicationcorelibrary.query.FetchUserPaymentDetailsQuery;
@@ -124,5 +126,12 @@ public class OrderSaga {
     public void handle(OrderApprovedEvent orderApprovedEvent) {
         log.info("order is approved. Order saga is complete for orderId. :{} ",
                 orderApprovedEvent.getOrderId());
+    }
+
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handle(ProductReservationCancelledEvent event) {
+        RejectOrderCommand command =
+                new RejectOrderCommand(event.getOrderId(), event.getReason());
+        commandGateway.send(command);
     }
 }
