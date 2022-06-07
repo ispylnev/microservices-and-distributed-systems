@@ -3,6 +3,7 @@ package com.appsdeveloperblog.estore.OrdersService.saga;
 import com.appsdeveloperblog.estore.OrdersService.command.commands.ApprovedOrderCommand;
 import com.appsdeveloperblog.estore.OrdersService.core.events.OrderCreatedEvent;
 import com.appsdeveloperblog.estore.OrdersService.event.OrderApprovedEvent;
+import com.communicationcorelibrary.communicationcorelibrary.command.CancelProductReservationCommand;
 import com.communicationcorelibrary.communicationcorelibrary.command.ProcessPaymentCommand;
 import com.communicationcorelibrary.communicationcorelibrary.command.ReserveProductCommand;
 import com.communicationcorelibrary.communicationcorelibrary.event.PaymentProcessedEvent;
@@ -69,11 +70,14 @@ public class OrderSaga {
             paymentDetails = queryGateway.query(fetchUserPaymentDetailsQuery, ResponseTypes.instanceOf(User.class)).join();
         } catch (Exception e) {
             log.error(e.getMessage());
+            log.error("compensation transaction has started");
+            cancelProductReservation(productReservedEvent, e.getMessage());
             // start compensation transaction
             return;
         }
         if (fetchUserPaymentDetailsQuery == null) {
-            // start compensation transaction
+            log.error("compensation transaction has started. Because the FetchUserPaymentDetailsQuery is null");
+            cancelProductReservation(productReservedEvent, "fetchUserPaymentDetailsQuery is null");
             return;
         }
         log.info("user details  has been fetched successfully");
@@ -88,11 +92,24 @@ public class OrderSaga {
             result = commandGateway.sendAndWait(processPaymentCommand, 3, TimeUnit.SECONDS);
         } catch (Exception e) {
             log.info("ProcessPayment has been failed");
-            // start compensation transaction
+            cancelProductReservation(productReservedEvent, e.getMessage());
         }
         if (result == null) {
-            // start compensation transaction
+            log.error("compensation transaction has started. Because the ProcessPaymentCommand is null");
+            cancelProductReservation(productReservedEvent, "Could not process user payment " +
+                    "with provided payment information");
         }
+    }
+
+    private void cancelProductReservation(ProductReservedEvent event, String reason) {
+        CancelProductReservationCommand command = CancelProductReservationCommand.builder()
+                .orderId(event.getOrderId())
+                .productId(event.getProductId())
+                .reason(reason)
+                .userId(event.getUserId())
+                .quantity(event.getQuantity())
+                .build();
+        commandGateway.send(command);
     }
 
     @SagaEventHandler(associationProperty = "orderId")
