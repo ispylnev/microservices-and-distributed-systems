@@ -2,6 +2,7 @@ package com.appsdeveloperblog.estore.OrdersService.saga;
 
 import com.appsdeveloperblog.estore.OrdersService.command.commands.ApprovedOrderCommand;
 import com.appsdeveloperblog.estore.OrdersService.core.events.OrderCreatedEvent;
+import com.appsdeveloperblog.estore.OrdersService.event.OrderApprovedEvent;
 import com.communicationcorelibrary.communicationcorelibrary.command.ProcessPaymentCommand;
 import com.communicationcorelibrary.communicationcorelibrary.command.ReserveProductCommand;
 import com.communicationcorelibrary.communicationcorelibrary.event.PaymentProcessedEvent;
@@ -14,6 +15,7 @@ import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
+import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.queryhandling.QueryGateway;
@@ -98,5 +100,12 @@ public class OrderSaga {
         ApprovedOrderCommand approvedOrderCommand =
                 new ApprovedOrderCommand(processedEvent.getOrderId());
         commandGateway.send(approvedOrderCommand);
+    }
+
+    @SagaEventHandler(associationProperty = "orderId")
+    @EndSaga
+    public void handle(OrderApprovedEvent orderApprovedEvent) {
+        log.info("order is approved. Order saga is complete for orderId. :{} ",
+                orderApprovedEvent.getOrderId());
     }
 }

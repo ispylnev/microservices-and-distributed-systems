@@ -30,7 +30,7 @@ public class OrderEventsHandler {
 
 
     @EventHandler
-    public void on(OrderApprovedEvent event) throws Exception {
+    public void on(OrderApprovedEvent event) {
         OrderEntity orderEntityByOrderId =
                 ordersRepository.findOrderEntityByOrderId(event.getOrderId());
         if (orderEntityByOrderId == null) {
