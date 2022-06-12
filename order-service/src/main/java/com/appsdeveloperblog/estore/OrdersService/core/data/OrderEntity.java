@@ -5,7 +5,7 @@
  */
 package com.appsdeveloperblog.estore.OrdersService.core.data;
 
-import com.appsdeveloperblog.estore.OrdersService.core.model.OrderStatus;
+import com.communicationcorelibrary.communicationcorelibrary.model.OrderStatus;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;

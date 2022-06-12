@@ -4,7 +4,7 @@ import com.appsdeveloperblog.estore.OrdersService.command.RejectOrderCommand;
 import com.appsdeveloperblog.estore.OrdersService.command.commands.ApprovedOrderCommand;
 import com.appsdeveloperblog.estore.OrdersService.core.events.OrderCreatedEvent;
 import com.appsdeveloperblog.estore.OrdersService.core.events.OrderRejectedEvent;
-import com.appsdeveloperblog.estore.OrdersService.core.model.OrderStatus;
+import com.communicationcorelibrary.communicationcorelibrary.model.OrderStatus;
 import com.appsdeveloperblog.estore.OrdersService.command.commands.CreateOrderCommand;
 import com.appsdeveloperblog.estore.OrdersService.event.OrderApprovedEvent;
 import org.axonframework.commandhandling.CommandHandler;

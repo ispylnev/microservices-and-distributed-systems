@@ -1,7 +1,7 @@
 
 package com.appsdeveloperblog.estore.OrdersService.core.events;
 
-import com.appsdeveloperblog.estore.OrdersService.core.model.OrderStatus;
+import com.communicationcorelibrary.communicationcorelibrary.model.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
